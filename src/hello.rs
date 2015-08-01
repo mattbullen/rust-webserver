@@ -88,7 +88,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
 
     // Serialize using `json::encode
     //let obj = Json::from_str(&object.to_json()).unwrap();
-    let encoded = json::encode(&obj).unwrap();
+    let encoded = json::encode(&object).unwrap();
 
     // Deserialize using `json::decode`
     // let decoded: TestStruct = json::decode(&encoded).unwrap();    
