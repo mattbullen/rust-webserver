@@ -35,7 +35,20 @@ struct Foo {
  
 // Serves a string to the user.  Try accessing "/".
 fn hello(_: &mut Request) -> IronResult<Response> {
-    let resp = Response::with((status::Ok, "Default string!"));
+    //let resp = Response::with((status::Ok, "Default string!"));
+    
+    let object = TestStruct {
+        data_int: 1,
+        data_str: "test".to_string(),
+        data_vector: vec![2,3,4,5],
+    };
+
+    // Serialize using json::encode
+    
+    let json_obj: Json = object.to_json();
+    let json_str: String = json_obj.to_string();
+    let resp = Response::with((status::Ok, json_str));
+    
     Ok(resp)
 }
 
@@ -64,7 +77,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     
     let object = TestStruct {
         data_int: 1,
-        data_str: test.to_string(),
+        data_str: "test".to_string(),
         data_vector: vec![2,3,4,5],
     };
 
