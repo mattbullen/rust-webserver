@@ -16,41 +16,10 @@ pub struct TestStruct  {
     data_vector: Vec<u8>,
 }
 
+#[derive(RustcDecodable, RustcEncodable)]
 struct foo {
     test: String,
 }
-
-    impl TestStruct {
-        fn to_json(&self) -> String {
-            let mut json_string = String::new();
-            json_string.push('{');
-
-            let field_vec = vec![self.test];
-            let field_name_vec = vec![stringify!(self.test)];
-            let mut previous_field = false;
-            let mut count = 0;
-            for field in field_vec {
-                if previous_field {
-                    json_string.push(',');
-                }
-                match field {
-                    Some(value) => {
-                        let opt_name = field_name_vec[count].split(". ").collect::<Vec<&str>>()[1];
-                        json_string.push('"');
-                        json_string.push_str(opt_name);
-                        json_string.push('"');
-                        json_string.push(':');
-                        json_string.push_str(&value.to_string());
-                        previous_field = true;
-                    },
-                    None => {},
-                }
-                count += 1;
-            }
-            json_string.push('}');
-            json_string
-        }
-    }
     
 // Serves a string to the user.  Try accessing "/".
 fn hello(_: &mut Request) -> IronResult<Response> {
