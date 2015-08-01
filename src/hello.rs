@@ -17,7 +17,7 @@ pub struct TestStruct  {
 }
 
 #[derive(RustcDecodable, RustcEncodable)]
-struct foo {
+struct Foo {
     test: String,
 }
     
@@ -47,7 +47,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let s1 = String::from_str(sss);    
     
     let json = zzz.to_string();
-    let decoded: foo = json::decode(&json).unwrap();
+    let decoded: Foo = json::decode(&json).unwrap();
     let test = decoded.test;
     
     let object = TestStruct {
@@ -56,16 +56,12 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
         data_vector: vec![2,3,4,5],
     };
 
-    // Serialize using `json::encode
-    //let obj = Json::from_str(&object.to_json()).unwrap();
-    let encoded = json::encode(&object).unwrap();
-
-    // Deserialize using `json::decode`
-    // let decoded: TestStruct = json::decode(&encoded).unwrap();    
+    // Serialize using json::encode
+    //let encoded = json::encode(&object).unwrap();
     
-    // let resp = Response::with((status::Ok, format!("Custom string: {}!", name)));
+    let resp = Response::with((status::Ok, format!("{}!", test)));
     
-    let resp = Response::with((status::Ok, encoded));
+    //let resp = Response::with((status::Ok, encoded));
     
     Ok(resp)
 }
