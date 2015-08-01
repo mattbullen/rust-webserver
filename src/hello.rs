@@ -9,6 +9,7 @@ use iron::{Iron, Request, Response, IronResult};
 use iron::status;
 use router::Router;
 use rustc_serialize::json::{self, Json, ToJson};
+use url::decode;
 
 #[derive(RustcDecodable, RustcEncodable)]
 pub struct TestStruct  {
@@ -55,10 +56,10 @@ fn hello(_: &mut Request) -> IronResult<Response> {
 // Serves a customized string to the user.  Try accessing "/world".
 fn hello_name(req: &mut Request) -> IronResult<Response> {
     let params = req.extensions.get::<Router>().unwrap();
-    let zzz = params.find("name").unwrap();
+    let zzz = decode(params.find("name").unwrap());
     
     
-    //let data = Json::from_str(zzz).unwrap();
+    let data = Json::from_str(zzz).unwrap();
     //let data_object = data.as_object().unwrap();
     //let name1 = data_object.get("test").unwrap();
     //let name2: String = json::decode(name1).unwrap();
@@ -67,7 +68,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let decoded: Posted = json::decode(&zzz).unwrap();    
     //let s = decoded.test;
     
-    //let ss = Json::find(&data, "test").unwrap();
+    let ss = Json::find(&data, "test").unwrap();
     //let sss = Json::as_string(&ss).unwrap();
     //let s1 = String::from_str(sss);    
     
@@ -77,7 +78,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     
     let object = TestStruct {
         data_int: 1,
-        data_str: zzz.to_string(),
+        data_str: ss.to_string(),
         data_vector: vec![2,3,4,5],
     };
 
@@ -88,7 +89,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let resp = Response::with((status::Ok, json_obj));
     
     let encoded: String = json::encode(&object).unwrap();
-    let resp = Response::with((status::Ok, zzz));
+    let resp = Response::with((status::Ok, encoded));
     
     //let resp = Response::with((status::Ok, format!("{}!", test)));
     
