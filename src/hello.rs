@@ -9,7 +9,7 @@ use router::Router;
 use iron::status;
 use rustc_serialize::json::{self, Json, ToJson};
 
-#[derive(RustcDecodable, RustcEncodable)]
+//#[derive(RustcDecodable, RustcEncodable)]
 pub struct TestStruct  {
     data_int: u8,
     data_str: String,
@@ -18,7 +18,12 @@ pub struct TestStruct  {
 
 impl ToJson for TestStruct {
     fn to_json(&self) -> Json {
-        Json::String(format!("{}+{}+{}i", self.data_int, self.data_str, self.data_vector))
+        let mut d = BTreeMap::new();
+        // All standard types implement `to_json()`, so use it
+        d.insert("data_int".to_string(), self.data_int.to_json());
+        d.insert("data_str".to_string(), self.data_str.to_json());
+        d.insert("data_vector".to_string(), self.data_vector.to_json());
+        Json::Object(d)
     }
 }
 
@@ -63,8 +68,13 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     };
 
     // Serialize using json::encode
-    let encoded: String = json::encode(&object).unwrap();
-    let resp = Response::with((status::Ok, encoded));
+    
+    let json_obj: Json = object.to_json();
+    let json_str: String = json_obj.to_string();
+    resp = Response::with((status::Ok, json_str));
+    
+    //let encoded: String = json::encode(&object).unwrap();
+    //let resp = Response::with((status::Ok, encoded));
     
     //let resp = Response::with((status::Ok, format!("{}!", test)));
     
