@@ -54,7 +54,7 @@ fn hello(_: &mut Request) -> IronResult<Response> {
 
 // Serves a customized string to the user.  Try accessing "/world".
 fn hello_name(req: &mut Request) -> IronResult<Response> {
-    //let params = req.extensions.get::<Router>().unwrap();
+    let params = req.extensions.get::<Router>().unwrap();
     let zzz = params.find("name").unwrap();
     
     
