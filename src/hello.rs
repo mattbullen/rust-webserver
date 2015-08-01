@@ -90,7 +90,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let encoded = json::encode(&object).unwrap();
     //let resp = Response::with((status::Ok, object));
     
-    let resp = Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}!", object)));
+    let resp = Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}!", zzz)));
     
     Ok(resp)
 }
