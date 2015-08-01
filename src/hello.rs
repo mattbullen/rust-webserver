@@ -11,11 +11,6 @@ use router::Router;
 use rustc_serialize::json::{self, Json, ToJson};
 use hyper::header::{Headers, AccessControlAllowOrigin};
 
-let mut headers = Headers::new();
-headers.set(
-    AccessControlAllowOrigin::Any
-);
-
 //#[derive(RustcDecodable, RustcEncodable)]
 pub struct TestStruct  {
     data_int: u8,
@@ -55,6 +50,10 @@ fn hello(_: &mut Request) -> IronResult<Response> {
     let json_str: String = json_obj.to_string();
     let resp = Response::with((status::Ok, json_str));
     
+    let mut headers = Headers::new();
+    headers.set(
+        AccessControlAllowOrigin::Any
+    );
     Ok(resp)
 }
 
@@ -91,13 +90,17 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     
     let json_obj: Json = object.to_json();
     let json_str: String = json_obj.to_string();
-    let resp = Response::with((status::Ok, json_str));
+    let resp = Response::with((status::Ok, json_obj));
     
     //let encoded: String = json::encode(&object).unwrap();
     //let resp = Response::with((status::Ok, encoded));
     
     //let resp = Response::with((status::Ok, format!("{}!", test)));
     
+    let mut headers = Headers::new();
+    headers.set(
+        AccessControlAllowOrigin::Any
+    );
     Ok(resp)
 }
 
