@@ -29,21 +29,21 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     
     
     let data = Json::from_str(zzz).unwrap();
-    //let data_object = data.as_object().unwrap();
-    //let name1 = data_object.get("test").unwrap();
+    let data_object = data.as_object().unwrap();
+    let name1 = data_object.get("test").unwrap();
     //let name2: String = json::decode(name1).unwrap();
 
     // Deserialize using `json::decode`
     //let decoded: Posted = json::decode(&zzz).unwrap();    
     //let s = decoded.test;
     
-    let ss = Json::find(&data, "test").unwrap();
-    let sss = Json::as_string(&ss).unwrap();
+    //let ss = Json::find(&data, "test").unwrap();
+    //let sss = Json::as_string(&ss).unwrap();
     //let s1 = String::from_str(sss);    
 
     let object = TestStruct {
         data_int: 1,
-        data_str: sss.to_string(),
+        data_str: name1.to_string(),
         data_vector: vec![2,3,4,5],
     };
 
