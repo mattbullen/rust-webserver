@@ -48,7 +48,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     
     let json = zzz.to_string();
     let decoded: foo = json::decode(&json).unwrap();
-    let test = decoded.get("test").unwrap();
+    let test = decoded.test;
     
     let object = TestStruct {
         data_int: 1,
