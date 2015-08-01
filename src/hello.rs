@@ -9,6 +9,12 @@ use iron::{Iron, Request, Response, IronResult};
 use iron::status;
 use router::Router;
 use rustc_serialize::json::{self, Json, ToJson};
+use hyper::header::{Headers, AccessControlAllowOrigin};
+
+let mut headers = Headers::new();
+headers.set(
+    AccessControlAllowOrigin::Any
+);
 
 //#[derive(RustcDecodable, RustcEncodable)]
 pub struct TestStruct  {
