@@ -4,9 +4,10 @@ extern crate rustc_serialize;
 
 use std::str::FromStr;
 use std::env;
+use std::collections::BTreeMap;
 use iron::{Iron, Request, Response, IronResult};
-use router::Router;
 use iron::status;
+use router::Router;
 use rustc_serialize::json::{self, Json, ToJson};
 
 //#[derive(RustcDecodable, RustcEncodable)]
@@ -71,7 +72,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     
     let json_obj: Json = object.to_json();
     let json_str: String = json_obj.to_string();
-    resp = Response::with((status::Ok, json_str));
+    let resp = Response::with((status::Ok, json_str));
     
     //let encoded: String = json::encode(&object).unwrap();
     //let resp = Response::with((status::Ok, encoded));
