@@ -47,11 +47,11 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let s1 = String::from_str(sss);    
     
     let json = zzz.to_string();
-    let decoded: String = json::decode(&json).unwrap();
+    let decoded: foo = json::decode(&json).unwrap();
 
     let object = TestStruct {
         data_int: 1,
-        data_str: decoded,
+        data_str: decoded.to_string(),
         data_vector: vec![2,3,4,5],
     };
 
