@@ -7,12 +7,12 @@ use std::env;
 use iron::{Iron, Request, Response, IronResult};
 use router::Router;
 use iron::status;
-use rustc_serialize::json::{self, Json, ToJson};
+use rustc_serialize::json::{self, Json};
 
 #[derive(RustcDecodable, RustcEncodable)]
-pub struct TestStruct {
+pub struct TestStruct  {
     data_int: u8,
-    data_str: String, //&'static str,
+    data_str: String,
     data_vector: Vec<u8>,
 }
 
@@ -25,8 +25,10 @@ fn hello(_: &mut Request) -> IronResult<Response> {
 // Serves a customized string to the user.  Try accessing "/world".
 fn hello_name(req: &mut Request) -> IronResult<Response> {
     let params = req.extensions.get::<Router>().unwrap();
-    let name = params.find("name").unwrap();
-    //let data = Json::from_str(zzz).unwrap();
+    let zzz = params.find("name").unwrap();
+    
+    
+    let data = Json::from_str(zzz).unwrap();
     //let data_object = data.as_object().unwrap();
     //let name1 = data_object.get("test").unwrap();
     //let name2: String = json::decode(name1).unwrap();
@@ -35,22 +37,25 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let decoded: Posted = json::decode(&zzz).unwrap();    
     //let s = decoded.test;
     
-    //let ss = Json::find(&data, "test").unwrap();
-    //let sss = Json::as_string(&ss).unwrap();
-    //let s1 = String::from_str(sss);
-    
+    let ss = Json::find(&data, "test").unwrap();
+    let sss = Json::as_string(&ss).unwrap();
+    //let s1 = String::from_str(sss);    
+
     let object = TestStruct {
         data_int: 1,
-        data_str: "z".to_string(),
+        data_str: sss.to_string(),
         data_vector: vec![2,3,4,5],
     };
 
     // Serialize using `json::encode`
-    //let encoded = json::encode(&object).unwrap();
+    let encoded = json::encode(&object).unwrap();
+
+    // Deserialize using `json::decode`
+    // let decoded: TestStruct = json::decode(&encoded).unwrap();    
     
-    let resp = Response::with((status::Ok, format!("Custom string: {}!", name)));
+    // let resp = Response::with((status::Ok, format!("Custom string: {}!", name)));
     
-    let resp = Response::with((status::Ok, object));
+    let resp = Response::with((status::Ok, encoded));
     
     Ok(resp)
 }
