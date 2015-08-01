@@ -16,6 +16,38 @@ pub struct TestStruct  {
     data_vector: Vec<u8>,
 }
 
+    impl TestStruct {
+        fn to_json(&self) -> String {
+            let mut json_string = String::new();
+            json_string.push('{');
+
+            let field_vec = vec![self.test];
+            let field_name_vec = vec![stringify!(self.test)];
+            let mut previous_field = false;
+            let mut count = 0;
+            for field in field_vec {
+                if previous_field {
+                    json_string.push(',');
+                }
+                match field {
+                    Some(value) => {
+                        let opt_name = field_name_vec[count].split(". ").collect::<Vec<&str>>()[1];
+                        json_string.push('"');
+                        json_string.push_str(opt_name);
+                        json_string.push('"');
+                        json_string.push(':');
+                        json_string.push_str(&value.to_string());
+                        previous_field = true;
+                    },
+                    None => {},
+                }
+                count += 1;
+            }
+            json_string.push('}');
+            json_string
+        }
+    }
+    
 // Serves a string to the user.  Try accessing "/".
 fn hello(_: &mut Request) -> IronResult<Response> {
     let resp = Response::with((status::Ok, "Default string!"));
@@ -43,12 +75,13 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
 
     let object = TestStruct {
         data_int: 1,
-        data_str: name1.to_string(),
+        data_str: "z".to_string(),
         data_vector: vec![2,3,4,5],
     };
 
-    // Serialize using `json::encode`
-    let encoded = json::encode(&object).unwrap();
+    // Serialize using `json::encode
+    let obj = Json::from_str(&object.to_json()).unwrap();
+    let encoded = json::encode(&obj).unwrap();
 
     // Deserialize using `json::decode`
     // let decoded: TestStruct = json::decode(&encoded).unwrap();    
