@@ -7,7 +7,7 @@ use std::env;
 use iron::{Iron, Request, Response, IronResult};
 use router::Router;
 use iron::status;
-use rustc_serialize::json::{self, Json};
+use rustc_serialize::json::{self, Json, ToJson};
 
 #[derive(RustcDecodable, RustcEncodable)]
 pub struct TestStruct  {
@@ -20,7 +20,13 @@ pub struct TestStruct  {
 struct Foo {
     test: String,
 }
-    
+
+impl ToJson for Foo {
+    fn to_json(&self) -> Json {
+        Json::String(format!("{}i", self.test))
+    }
+}
+   
 // Serves a string to the user.  Try accessing "/".
 fn hello(_: &mut Request) -> IronResult<Response> {
     let resp = Response::with((status::Ok, "Default string!"));
@@ -57,11 +63,10 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     };
 
     // Serialize using json::encode
-    //let encoded = json::encode(&object).unwrap();
+    let encoded = json::encode(&object).unwrap();
+    let resp = Response::with((status::Ok, encoded));
     
-    let resp = Response::with((status::Ok, format!("{}!", test)));
-    
-    //let resp = Response::with((status::Ok, encoded));
+    //let resp = Response::with((status::Ok, format!("{}!", test)));
     
     Ok(resp)
 }
