@@ -83,14 +83,14 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
 
     // Serialize using json::encode 
     
-    let json_obj: Json = object.to_json();
-    let json_str: String = json_obj.to_string();
-    let resp = Response::with((status::Ok, json_obj));
+    // let json_obj: Json = object.to_json();
+    //let json_str: String = json_obj.to_string();
+    //let resp = Response::with((status::Ok, json_obj));
     
     //let encoded = json::encode(&object).unwrap();
     //let resp = Response::with((status::Ok, object));
     
-    //let resp = Response::with((status::Ok, format!("{}!", test)));
+    let resp = Response::with((status::Ok, format!("{}!", object)));
     
     Ok(resp)
 }
