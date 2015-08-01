@@ -16,17 +16,17 @@ pub struct TestStruct  {
     data_vector: Vec<u8>,
 }
 
+impl ToJson for TestStruct {
+    fn to_json(&self) -> Json {
+        Json::String(format!("{}+{}+{}i", self.data_int, self.data_str, self.data_vector))
+    }
+}
+
 #[derive(RustcDecodable, RustcEncodable)]
 struct Foo {
     test: String,
 }
-
-impl ToJson for Foo {
-    fn to_json(&self) -> Json {
-        Json::String(format!("{}i", self.test))
-    }
-}
-   
+ 
 // Serves a string to the user.  Try accessing "/".
 fn hello(_: &mut Request) -> IronResult<Response> {
     let resp = Response::with((status::Ok, "Default string!"));
@@ -63,7 +63,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     };
 
     // Serialize using json::encode
-    let encoded = json::encode(&object).unwrap();
+    let encoded: String = json::encode(&object).unwrap();
     let resp = Response::with((status::Ok, encoded));
     
     //let resp = Response::with((status::Ok, format!("{}!", test)));
