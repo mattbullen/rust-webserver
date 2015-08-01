@@ -35,8 +35,8 @@ struct Foo {
  
 // Serves a string to the user.  Try accessing "/".
 fn hello(_: &mut Request) -> IronResult<Response> {
-    //let resp = Response::with((status::Ok, "Default string!"));
-    
+    let resp = Response::with((status::Ok, "Default string!"));
+    /*
     let object = TestStruct {
         data_int: 1,
         data_str: "test".to_string(),
@@ -48,7 +48,7 @@ fn hello(_: &mut Request) -> IronResult<Response> {
     let json_obj: Json = object.to_json();
     let json_str: String = json_obj.to_string();
     let resp = Response::with((status::Ok, json_str));
-
+    */
     Ok(resp)
 }
 
@@ -59,7 +59,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     
     
     let data = Json::from_str(zzz).unwrap();
-    let data_object = data.as_object().unwrap();
+    //let data_object = data.as_object().unwrap();
     //let name1 = data_object.get("test").unwrap();
     //let name2: String = json::decode(name1).unwrap();
 
@@ -67,13 +67,13 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let decoded: Posted = json::decode(&zzz).unwrap();    
     //let s = decoded.test;
     
-    let ss = Json::find(&data_object, "test").unwrap();
+    let ss = Json::find(&data, "test").unwrap();
     //let sss = Json::as_string(&ss).unwrap();
     //let s1 = String::from_str(sss);    
     
-    let json = zzz.to_string();
-    let decoded: Foo = json::decode(&json).unwrap();
-    let test = decoded.test;
+    //let json = zzz.to_string();
+    //let decoded: Foo = json::decode(&json).unwrap();
+    //let test = decoded.test;
     
     let object = TestStruct {
         data_int: 1,
