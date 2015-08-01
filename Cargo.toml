@@ -1,0 +1,18 @@
+[package]
+
+name = "heroku-rust-cargo-hello"
+version = "1.0.0"
+authors = ["me@example.com"]
+
+[features]
+unstable = []
+
+[[bin]]
+name = "hello"
+
+[dependencies]
+iron = "*"
+rustc-serialize = "0.3"
+
+[dependencies.router]
+git = "https://github.com/iron/router.git"
