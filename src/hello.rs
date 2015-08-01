@@ -1,6 +1,7 @@
 extern crate iron;
 extern crate router;
 extern crate rustc_serialize;
+extern crate hyper;
 
 use std::str::FromStr;
 use std::env;
