@@ -11,12 +11,12 @@ use router::Router;
 use rustc_serialize::json::{self, Json, ToJson};
 
 #[derive(RustcDecodable, RustcEncodable)]
-pub struct TestStruct  {
+pub struct TestStruct {
     data_int: u8,
     data_str: String,
     data_vector: Vec<u8>,
 }
-/*
+
 impl ToJson for TestStruct {
     fn to_json(&self) -> Json {
         let mut d = BTreeMap::new();
@@ -27,7 +27,7 @@ impl ToJson for TestStruct {
         Json::Object(d)
     }
 }
-*/
+
 #[derive(RustcDecodable, RustcEncodable)]
 struct Foo {
     test: String,
@@ -81,14 +81,14 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
         data_vector: vec![2,3,4,5],
     };
 
-    // Serialize using json::encode
+    // Serialize using json::encode 
     
-    //let json_obj: Json = object.to_json();
-    //let json_str: String = json_obj.to_string();
-    //let resp = Response::with((status::Ok, json_obj));
+    let json_obj: Json = object.to_json();
+    let json_str: String = json_obj.to_string();
+    let resp = Response::with((status::Ok, json_obj));
     
-    let encoded = json::encode(&object).unwrap();
-    let resp = Response::with((status::Ok, object));
+    //let encoded = json::encode(&object).unwrap();
+    //let resp = Response::with((status::Ok, object));
     
     //let resp = Response::with((status::Ok, format!("{}!", test)));
     
