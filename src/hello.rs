@@ -10,13 +10,13 @@ use iron::status;
 use router::Router;
 use rustc_serialize::json::{self, Json, ToJson};
 
-//#[derive(RustcDecodable, RustcEncodable)]
+#[derive(RustcDecodable, RustcEncodable)]
 pub struct TestStruct  {
     data_int: u8,
     data_str: String,
     data_vector: Vec<u8>,
 }
-
+/*
 impl ToJson for TestStruct {
     fn to_json(&self) -> Json {
         let mut d = BTreeMap::new();
@@ -27,7 +27,7 @@ impl ToJson for TestStruct {
         Json::Object(d)
     }
 }
-
+*/
 #[derive(RustcDecodable, RustcEncodable)]
 struct Foo {
     test: String,
