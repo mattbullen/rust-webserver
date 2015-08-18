@@ -1,4 +1,4 @@
-## JSON through a Rust Webserver
+## JSON through a Rust webserver
 
 A side project to learn the [Rust](https://www.rust-lang.org/) language. It's a simple Heroku app built using the [Iron](http://ironframework.io/doc/iron/) framework, based on this [example](https://github.com/defyrlt/heroku-rust-cargo-hello). 
 
