@@ -1,113 +1,152 @@
+#[macro_use]
+extern crate rustless;
+
 extern crate iron;
-extern crate router;
-extern crate rustc_serialize;
+extern crate url;
+extern crate rustc_serialize as serialize;
+extern crate valico;
+extern crate cookie;
 
-use std::str::FromStr;
-use std::env;
-use std::collections::BTreeMap;
-use iron::{Iron, Request, Response, IronResult};
-use iron::status;
-use router::Router;
-use rustc_serialize::json::{self, Json, ToJson};
+use std::fmt;
+use std::error;
+use std::error::Error as StdError;
+use valico::json_dsl;
 
-#[derive(RustcDecodable, RustcEncodable)]
-pub struct TestStruct {
-    data_int: u8,
-    data_str: String,
-    data_vector: Vec<u8>,
-}
+use rustless::server::status;
+use rustless::errors::{Error};
+use rustless::batteries::swagger;
+use rustless::batteries::cookie::CookieExt;
+use rustless::{Nesting};
 
-impl ToJson for TestStruct {
-    fn to_json(&self) -> Json {
-        let mut d = BTreeMap::new();
-        // All standard types implement `to_json()`, so use it
-        d.insert("data_int".to_string(), self.data_int.to_json());
-        d.insert("data_str".to_string(), self.data_str.to_json());
-        d.insert("data_vector".to_string(), self.data_vector.to_json());
-        Json::Object(d)
+#[derive(Debug)]
+pub struct UnauthorizedError;
+
+impl error::Error for UnauthorizedError {
+    fn description(&self) -> &str {
+        return "UnauthorizedError";
     }
 }
 
-#[derive(RustcDecodable, RustcEncodable)]
-struct Foo {
-    test: String,
-}
- 
-// Serves a string to the user.  Try accessing "/".
-fn hello(_: &mut Request) -> IronResult<Response> {
-    let resp = Response::with((status::Ok, "Default string!"));
-    /*
-    let object = TestStruct {
-        data_int: 1,
-        data_str: "test".to_string(),
-        data_vector: vec![2,3,4,5],
-    };
-
-    // Serialize using json::encode
-    
-    let json_obj: Json = object.to_json();
-    let json_str: String = json_obj.to_string();
-    let resp = Response::with((status::Ok, json_str));
-    */
-    Ok(resp)
+impl fmt::Display for UnauthorizedError {
+    fn fmt(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        self.description().fmt(formatter)
+    }
 }
 
-// Serves a customized string to the user.  Try accessing "/world".
-fn hello_name(req: &mut Request) -> IronResult<Response> {
-    let params = req.extensions.get::<Router>().unwrap();
-    let zzz = params.find("name").unwrap();
-    
-    
-    //let data = Json::from_str(zzz).unwrap();
-    //let data_object = data.as_object().unwrap();
-    //let name1 = data_object.get("test").unwrap();
-    //let name2: String = json::decode(name1).unwrap();
-
-    // Deserialize using `json::decode`
-    //let decoded: Posted = json::decode(&zzz).unwrap();    
-    //let s = decoded.test;
-    
-    //let ss = Json::find(&data, "test").unwrap();
-    //let sss = Json::as_string(&ss).unwrap();
-    //let s1 = String::from_str(sss);    
-    
-    //let json = zzz.to_string();
-    //let decoded: Foo = json::decode(&json).unwrap();
-    //let test = decoded.test;
-    
-    let object = TestStruct {
-        data_int: 1,
-        data_str: zzz.to_string(),
-        data_vector: vec![2,3,4,5],
-    };
-
-    // Serialize using json::encode 
-    
-    // let json_obj: Json = object.to_json();
-    //let json_str: String = json_obj.to_string();
-    //let resp = Response::with((status::Ok, json_obj));
-    
-    //let encoded = json::encode(&object).unwrap();
-    //let resp = Response::with((status::Ok, object));
-    
-    let resp = Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", zzz)));
-    
-    Ok(resp)
-}
-
-/// Look up our server port number in PORT, for compatibility with Heroku.
+// Look up our server port number in PORT, for compatibility with Heroku.
 fn get_server_port() -> u16 {
     let port_str = env::var("PORT").unwrap_or(String::new());
     FromStr::from_str(&port_str).unwrap_or(8080)
 }
 
-/// Configure and run our server.
 fn main() {
-    // Set up our URL router.
-    let mut router = Router::new();
-    router.get("/", hello);
-    router.get("/:name", hello_name);
 
-    // Run the server.
-    Iron::new(router).http(("0.0.0.0", get_server_port())).unwrap();
+    let mut app = rustless::Application::new(rustless::Api::build(|api| {
+        api.prefix("api");
+        api.version("v1", rustless::Versioning::Path);
+
+        api.mount(swagger::create_api("api-docs"));
+
+        api.error_formatter(|err, _media| {
+            match err.downcast::<UnauthorizedError>() {
+                Some(_) => {
+                    return Some(rustless::Response::from_string(
+                        status::StatusCode::Unauthorized,
+                        "Please provide correct `token` parameter".to_string()
+                    ))
+                },
+                None => None
+            }
+        });
+
+        api.post("greet/:name", |endpoint| {
+            endpoint.summary("Sends greeting");
+            endpoint.desc("Use this to talk to yourself");
+            endpoint.params(|params| {
+                params.req_typed("name", json_dsl::string());
+                params.req_typed("greeting", json_dsl::string());
+            });
+            endpoint.handle(|client, params| {
+                client.text(
+                    format!("{}, {}",
+                        params.find("greeting").unwrap().to_string(),
+                        params.find("name").unwrap().to_string())
+                )
+            })
+        });
+
+        api.get("echo", |endpoint| {
+            endpoint.summary("Sends back what it gets");
+            endpoint.desc("Use this to talk to yourself");
+            endpoint.handle(|client, params| {
+                client.json(params)
+            })
+        });
+
+        api.namespace("admin", |admin_ns| {
+
+            admin_ns.params(|params| {
+                params.req_typed("token", json_dsl::string())
+            });
+
+            // Using after_validation callback to check token
+            admin_ns.after_validation(|_client, params| {
+
+                match params.find("token") {
+                    // We can unwrap() safely because token in validated already
+                    Some(token) => if token.as_string().unwrap() == "password1" { return Ok(()) },
+                    None => ()
+                }
+
+                // Fire error from callback is token is wrong
+                return Err(rustless::ErrorResponse{
+                    error: Box::new(UnauthorizedError) as Box<Error + Send>,
+                    response: None
+                })
+
+            });
+
+            // This `/api/admin/server_status` endpoint is secure now
+            admin_ns.get("server_status", |endpoint| {
+                endpoint.summary("Get server status");
+                endpoint.desc("Use this API to receive some useful information about the state of our server");
+                endpoint.handle(|client, _params| {
+                    {
+                        let cookies = client.request.cookies();
+                        let signed_cookies = cookies.signed();
+
+                        let user_cookie = cookie::Cookie::new("session".to_string(), "verified".to_string());
+                        signed_cookies.add(user_cookie);
+                    }
+
+                    client.text("Everything is OK".to_string())
+                })
+            });
+        })
+    }));
+
+    swagger::enable(&mut app, swagger::Spec {
+        info: swagger::Info {
+            title: "Example API".to_string(),
+            description: Some("Simple API to demonstration".to_string()),
+            contact: Some(swagger::Contact {
+                name: "Stanislav Panferov".to_string(),
+                url: Some("http://panferov.me".to_string()),
+                ..std::default::Default::default()
+            }),
+            license: Some(swagger::License {
+                name: "MIT".to_string(),
+                url: "http://opensource.org/licenses/MIT".to_string()
+            }),
+            ..std::default::Default::default()
+        },
+        ..std::default::Default::default()
+    });
+
+    let mut chain = iron::Chain::new(app);
+    chain.link(::rustless::batteries::cookie::new("secretsecretsecretsecretsecretsecretsecret".as_bytes()));
+
+    iron::Iron::new(chain).http(("0.0.0.0", get_server_port())).unwrap();
+    println!("On 4000");
+
 }
