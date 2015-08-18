@@ -12,6 +12,9 @@ name = "hello"
 
 [dependencies]
 iron = "*"
+url = "*"
+valico = "*"
+cookie = "*"
 rustc-serialize = "0.3"
 
 [dependencies.router]
