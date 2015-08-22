@@ -95,7 +95,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let encoded = json::encode(&object).unwrap();
     //let resp = Response::with((status::Ok, object));
     
-    let path = Path::new("in.txt");
+    let path = Path::new("../in.txt");
     let display = path.display();
 
     let mut file = match File::open(&path) {
