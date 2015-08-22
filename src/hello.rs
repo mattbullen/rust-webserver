@@ -116,11 +116,11 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let mut file = File::open(&path).unwrap();
     //let content = file.read_to_string().unwrap();
 
-let mut f = File::create("foo.txt").unwrap();
-f.write_all(b"Hello world!");
+    //let mut f = File::create("foo.txt").unwrap();
+    //f.write_all(b"Hello world!");
     
     
-    let mut file = File::open("foo.txt").unwrap();
+    let mut file = File::open(filename).unwrap();
     let mut content = String::new();
     file.read_to_string(&mut content).unwrap();
     
@@ -139,6 +139,12 @@ fn get_server_port() -> u16 {
 }
 
 fn main() {
+    
+    
+    let mut f = File::create("foo.txt").unwrap();
+    f.write_all(b"Hello world!");
+    
+    
     let mut router = Router::new();
     router.get("/", hello);
     router.get("/:name", hello_name);
