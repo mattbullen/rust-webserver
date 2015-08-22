@@ -117,10 +117,14 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let content = file.read_to_string().unwrap();
     
     //let mut file = File::open(filename).unwrap();
-    let mut content = String::new();
-    file.read_to_string(&mut content).unwrap();
+    //let mut content = String::new();
+    //file.read_to_string(&mut content).unwrap();
     
-    let resp = Response::with((status::Ok, format!("{{ \"content\": \"{}\" }}", content)));
+    let mut contents: Vec<u8> = Vec::new();
+    let result = file.read_to_end(&mut contents).unwrap();
+    let filestr = String::from_utf8(contents).unwrap();
+        
+    let resp = Response::with((status::Ok, format!("{{ \"content\": \"{}\" }}", filestr)));
     Ok(resp)
 }
 
