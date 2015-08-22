@@ -2,6 +2,10 @@ extern crate iron;
 extern crate router;
 extern crate rustc_serialize;
 
+use std::error::Error;
+use std::fs::File;
+use std::io::prelude::*;
+use std::path::Path;
 use std::str::FromStr;
 use std::env;
 use std::collections::BTreeMap;
@@ -54,8 +58,9 @@ fn hello(_: &mut Request) -> IronResult<Response> {
 
 // Serves a customized string to the user.  Try accessing "/world".
 fn hello_name(req: &mut Request) -> IronResult<Response> {
+    
     let params = req.extensions.get::<Router>().unwrap();
-    let zzz = params.find("name").unwrap();
+    let filename = params.find("name").unwrap();
     
     
     //let data = Json::from_str(zzz).unwrap();
@@ -83,14 +88,14 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
 
     // Serialize using json::encode 
     
-    // let json_obj: Json = object.to_json();
+    //let json_obj: Json = object.to_json();
     //let json_str: String = json_obj.to_string();
     //let resp = Response::with((status::Ok, json_obj));
     
     //let encoded = json::encode(&object).unwrap();
     //let resp = Response::with((status::Ok, object));
     
-    let path = Path::new(zzz);
+    let path = Path::new(filename);
     let display = path.display();
 
     let mut file = match File::open(&path) {
