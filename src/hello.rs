@@ -80,11 +80,11 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let decoded: Foo = json::decode(&json).unwrap();
     //let test = decoded.test;
     
-    let object = TestStruct {
-        data_int: 1,
-        data_str: zzz.to_string(),
-        data_vector: vec![2,3,4,5],
-    }; 
+    //let object = TestStruct {
+    //    data_int: 1,
+    //    data_str: filename.to_string(),
+    //    data_vector: vec![2,3,4,5],
+    //}; 
 
     // Serialize using json::encode 
     
@@ -115,19 +115,14 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     Ok(resp)
 }
 
-/// Look up our server port number in PORT, for compatibility with Heroku.
 fn get_server_port() -> u16 {
     let port_str = env::var("PORT").unwrap_or(String::new());
     FromStr::from_str(&port_str).unwrap_or(8080)
 }
 
-/// Configure and run our server.
 fn main() {
-    // Set up our URL router.
     let mut router = Router::new();
     router.get("/", hello);
     router.get("/:name", hello_name);
-
-    // Run the server.
     Iron::new(router).http(("0.0.0.0", get_server_port())).unwrap();
 }
