@@ -115,8 +115,8 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let path = Path::new("../in.txt");
     //let mut file = File::open(&path).unwrap();
     //let content = file.read_to_string().unwrap();
-    print!("File: {}", filename);
-    let mut file = File::open(filename).unwrap();
+    //print!("File: {}", filename);
+    let mut file = File::open("https://github.com/mattbullen/rust-webserver/blob/master/src/in.txt").unwrap();
     let mut content = String::new();
     file.read_to_string(&mut content).unwrap();
     
