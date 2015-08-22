@@ -112,11 +112,11 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
         //Ok() => Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", s))),
     }*/
     
-    //let path = Path::new(filename);
-    //let mut file = File::open(&path).unwrap();
+    let path = Path::new(filename);
+    let mut file = File::open(&path).unwrap();
     //let content = file.read_to_string().unwrap();
     
-    let mut file = File::open(filename).unwrap();
+    //let mut file = File::open(filename).unwrap();
     let mut content = String::new();
     file.read_to_string(&mut content).unwrap();
     
