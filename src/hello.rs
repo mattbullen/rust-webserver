@@ -1,6 +1,6 @@
 extern crate iron;
 extern crate router;
-extern crate rustc_serialize;
+//extern crate rustc_serialize;
 
 use std::error::Error;
 use std::fs::File;
@@ -12,8 +12,8 @@ use std::collections::BTreeMap;
 use iron::{Iron, Request, Response, IronResult};
 use iron::status;
 use router::Router;
-use rustc_serialize::json::{self, Json, ToJson};
-
+//use rustc_serialize::json::{self, Json, ToJson};
+/*
 #[derive(RustcDecodable, RustcEncodable)]
 pub struct TestStruct {
     data_int: u8,
@@ -36,7 +36,7 @@ impl ToJson for TestStruct {
 struct Foo {
     test: String,
 }
- 
+*/
 // Serves a string to the user.  Try accessing "/".
 fn hello(_: &mut Request) -> IronResult<Response> {
     let resp = Response::with((status::Ok, format!("{{ \"data_str\": \" \" }}")));
@@ -106,8 +106,10 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
 
     let mut s = String::new();
     match file.read_to_string(&mut s) {
-        Err(why) => panic!("couldn't read {}: {}", display, Error::description(&why)),
-        Ok(_) => print!("{} contains:\n{}", display, s),
+        //Err(why) => panic!("couldn't read {}: {}", display, Error::description(&why)),
+        //Ok(_) => print!("{} contains:\n{}", display, s),
+        Err(why) => Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", Error::description(&why)))),
+        Ok(_) => Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", s))),
     }    
 
     let resp = Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", s)));
