@@ -12,6 +12,15 @@ use iron::{Iron, Request, Response, IronResult};
 use iron::status;
 use router::Router;
 
+fn populate_files() {
+    let mut f0 = File::create("hello_world.txt").unwrap();
+    f0.write_all(b"Hello world!");
+    let mut f1 = File::create("foo.txt").unwrap();
+    f1.write_all(b"I'm the foo.txt file!");
+    let mut f2 = File::create("bar.txt").unwrap();
+    f2.write_all(b"I'm the bar.txt file!");
+}
+
 fn noop(_: &mut Request) -> IronResult<Response> {
     let resp = Response::with((status::Ok, format!("{{ \"file\": \"none\", \"content\": \"none\" }}")));
     Ok(resp)
@@ -28,15 +37,6 @@ fn get_json_from_file(req: &mut Request) -> IronResult<Response> {
     
     let resp = Response::with((status::Ok, format!("{{ \"file\": \"{}\", \"content\": \"{}\" }}", filename, content)));
     Ok(resp)
-}
-
-fn populate_files() {
-    let mut f0 = File::create("hello_world.txt").unwrap();
-    f0.write_all(b"Hello world!");
-    let mut f1 = File::create("foo.txt").unwrap();
-    f1.write_all(b"I'm the foo.txt file!");
-    let mut f2 = File::create("bar.txt").unwrap();
-    f2.write_all(b"I'm the bar.txt file!");
 }
 
 fn get_server_port() -> u16 {
