@@ -116,13 +116,8 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let mut file = File::open(&path).unwrap();
     //let content = file.read_to_string().unwrap();
 
-let mut f = match File::create("foo.txt") {
-    Err(e) => {
-        println!("Couldn't open foo.txt");
-    },
-    Ok(f) => f,
-};
-f.write_all(b"Hello world!");    
+let mut f = File::create("foo.txt").unwrap();
+f.write_all(b"Hello world!");
     
     
     let mut file = File::open("foo.txt").unwrap();
