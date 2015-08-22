@@ -119,7 +119,6 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let mut f = File::create("foo.txt").unwrap();
     //f.write_all(b"Hello world!");
     
-    
     let mut file = File::open(filename).unwrap();
     let mut content = String::new();
     file.read_to_string(&mut content).unwrap();
