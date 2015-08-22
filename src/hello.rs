@@ -94,24 +94,23 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     
     //let encoded = json::encode(&object).unwrap();
     //let resp = Response::with((status::Ok, object));
-    /*
-    let path = Path::new(filename);
+    
+    let path = Path::new("in.txt");
     let display = path.display();
 
     let mut file = match File::open(&path) {
-
-        Err(why) => panic!("couldn't open {}: {}", display, Error::description(&why)),
+        Err(why) => panic!("Couldn't open {}: {}", display, Error::description(&why)),
         Ok(file) => file,
     };
 
     let mut s = String::new();
     match file.read_to_string(&mut s) {
-        Err(why) => panic!("couldn't read {}: {}", display, Error::description(&why)),
+        Err(why) => panic!("Couldn't read {}: {}", display, Error::description(&why)),
         Ok(_) => print!("{} contains:\n{}", display, s),
         //Err(why) => Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", Error::description(&why)))),
         //Ok() => Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", s))),
-    }*/
-    
+    }
+    /*
     let path = Path::new("in.txt");
     let mut file = File::open(&path).unwrap();
     //let content = file.read_to_string().unwrap();
@@ -123,8 +122,9 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     let mut contents: Vec<u8> = Vec::new();
     let result = file.read_to_end(&mut contents).unwrap();
     let filestr = String::from_utf8(contents).unwrap();
-        
-    let resp = Response::with((status::Ok, format!("{{ \"content\": \"{}\" }}", filestr)));
+     */
+     
+    let resp = Response::with((status::Ok, format!("{{ \"content\": \"{}\" }}", s)));
     Ok(resp)
 }
 
