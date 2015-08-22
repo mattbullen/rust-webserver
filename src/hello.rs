@@ -112,7 +112,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
         //Ok() => Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", s))),
     }*/
     
-    let path = Path::new(filename);
+    let path = Path::new("in.txt");
     let mut file = File::open(&path).unwrap();
     //let content = file.read_to_string().unwrap();
     
