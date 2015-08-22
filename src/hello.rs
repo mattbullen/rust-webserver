@@ -119,7 +119,6 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
 let mut f = match File::create("foo.txt") {
     Err(e) => {
         println!("Couldn't open foo.txt");
-        return;
     },
     Ok(f) => f,
 };
