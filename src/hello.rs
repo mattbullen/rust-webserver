@@ -94,7 +94,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     
     //let encoded = json::encode(&object).unwrap();
     //let resp = Response::with((status::Ok, object));
-    
+    /*
     let path = Path::new(filename);
     let display = path.display();
 
@@ -104,7 +104,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
         Ok(file) => file,
     };
 
-    /*let mut s = String::new();
+    let mut s = String::new();
     match file.read_to_string(&mut s) {
         Err(why) => panic!("couldn't read {}: {}", display, Error::description(&why)),
         Ok(_) => print!("{} contains:\n{}", display, s),
@@ -112,10 +112,12 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
         //Ok() => Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", s))),
     }*/
     
-    let content = file.read_to_string();
-    content.unwrap();
+    let path = Path::new(filename);
+    let display = path.display();
+    let mut file = File::open(&path).unwrap();
+    let content = file.read_to_string().unwrap();
     
-    let resp = Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", content)));
+    let resp = Response::with((status::Ok, format!("{{ \"content\": \"{}\" }}", content)));
     Ok(resp)
 }
 
