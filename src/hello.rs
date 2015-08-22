@@ -94,8 +94,9 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     
     //let encoded = json::encode(&object).unwrap();
     //let resp = Response::with((status::Ok, object));
-    
+    /*
     let path = Path::new("../in.txt");
+    
     let display = path.display();
 
     let mut file = match File::open(&path) {
@@ -110,7 +111,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
         //Err(why) => Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", Error::description(&why)))),
         //Ok() => Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", s))),
     }
-    /*
+    */
     let path = Path::new("in.txt");
     let mut file = File::open(&path).unwrap();
     //let content = file.read_to_string().unwrap();
@@ -122,9 +123,9 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     let mut contents: Vec<u8> = Vec::new();
     let result = file.read_to_end(&mut contents).unwrap();
     let filestr = String::from_utf8(contents).unwrap();
-     */
+    print!("Contains: {}", filestr);
      
-    let resp = Response::with((status::Ok, format!("{{ \"content\": \"{}\" }}", s)));
+    let resp = Response::with((status::Ok, format!("{{ \"content\": \"{}\" }}", filestr)));
     Ok(resp)
 }
 
