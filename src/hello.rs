@@ -90,7 +90,22 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
     //let encoded = json::encode(&object).unwrap();
     //let resp = Response::with((status::Ok, object));
     
-    let resp = Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", zzz)));
+    let path = Path::new(zzz);
+    let display = path.display();
+
+    let mut file = match File::open(&path) {
+
+        Err(why) => panic!("couldn't open {}: {}", display, Error::description(&why)),
+        Ok(file) => file,
+    };
+
+    let mut s = String::new();
+    match file.read_to_string(&mut s) {
+        Err(why) => panic!("couldn't read {}: {}", display, Error::description(&why)),
+        Ok(_) => print!("{} contains:\n{}", display, s),
+    }    
+
+    let resp = Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", s)));
     
     Ok(resp)
 }
