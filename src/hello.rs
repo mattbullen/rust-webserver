@@ -79,7 +79,7 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
         data_int: 1,
         data_str: zzz.to_string(),
         data_vector: vec![2,3,4,5],
-    };
+    }; 
 
     // Serialize using json::encode 
     
