@@ -104,16 +104,18 @@ fn hello_name(req: &mut Request) -> IronResult<Response> {
         Ok(file) => file,
     };
 
-    let mut s = String::new();
+    /*let mut s = String::new();
     match file.read_to_string(&mut s) {
         Err(why) => panic!("couldn't read {}: {}", display, Error::description(&why)),
         Ok(_) => print!("{} contains:\n{}", display, s),
         //Err(why) => Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", Error::description(&why)))),
         //Ok() => Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", s))),
-    }    
-
-    let resp = Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", s)));
+    }*/
     
+    let content = file.read_to_string();
+    content.unwrap();
+    
+    let resp = Response::with((status::Ok, format!("{{ \"data_str\": \"{}\" }}", content)));
     Ok(resp)
 }
 
