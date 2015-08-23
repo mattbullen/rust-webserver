@@ -32,11 +32,11 @@ fn populate_files() {
     let mut f0 = File::create("hello_world.txt").unwrap();
     f0.write_all(b"Hello world!");
     let mut f1 = File::create("strings.txt").unwrap();
-    f1.write_all(b"[red, green, blue]");
+    f1.write_all(b"[\"red\", \"green\", \"blue\"]");
     let mut f2 = File::create("numbers.txt").unwrap();
     f2.write_all(b"[0, 1, 2, 3, 4, 5]");
     let mut f3 = File::create("objects.txt").unwrap();
-    f3.write_all(b"[{ a: 1 }, { b: 2 }]");
+    f3.write_all(b"[{ \"a\": 1 }, { \"b\": 2 }]");
 }
 
 // The empty request case: returns a JSON object indicating the error (just a basic 404 here)
