@@ -8,7 +8,7 @@ authors = ["mattbullenprogramming@gmail.com"]
 unstable = []
 
 [[bin]]
-name = "rust-webserver"
+name = "hello"
 
 [dependencies]
 iron = "*"
