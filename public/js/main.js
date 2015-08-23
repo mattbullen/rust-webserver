@@ -19,15 +19,18 @@ function request(event) {
         "https://gentle-refuge-2601.herokuapp.com/" + choiceValue,
         function (response) {
             if (!response || response.length < 1) {
-                console.log("Error");
-                $("#json").html("Error");
+                console.log("Server Error");
+                $("#json").html("Server Error");
             } else {
                 console.log("\nResponse:", response);
                 var json = JSON.parse(decodeURI(response));
-                console.log(json.file_content);
-                json.file_content = $.parseJSON(json.file_content);
-                console.log(json.file_content);
-                //console.log("JSON.parse():", json);
+                if (json.file_content) {
+                    json.file_content = $.parseJSON(json.file_content);
+                }
+                if (json.error_content) {
+                    json.error_content = $.parseJSON(json.error_content);
+                }
+                console.log("Parsed JSON:", json);
                 $("#json").html("<pre>" + JSON.stringify(json, null, 4) + "</pre>");
             }
         }
