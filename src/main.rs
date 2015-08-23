@@ -19,6 +19,10 @@ fn populate_files() {
     f1.write_all(b"I'm the foo.txt file!");
     let mut f2 = File::create("bar.txt").unwrap();
     f2.write_all(b"I'm the bar.txt file!");
+    let mut f3 = File::create("numbers.txt").unwrap();
+    f3.write_all(b"0123456789");
+    let mut f4 = File::create("yay.txt").unwrap();
+    f4.write_all(b"It works!");
 }
 
 // Not really in this example, but the empty request case
