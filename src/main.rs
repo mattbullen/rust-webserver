@@ -48,9 +48,9 @@ fn send_json_error(_: &mut Request) -> IronResult<Response> {
     // let resp = Response::with((status::Ok, format!("{{ \"error\": \"404\", \"message\": \"file not found\" }}")));
     
     // Send the JSON response to the browser
-    let error_type = "404".to_string();
-    let error_message = "file not found".to_string();
-    let response_json = ErrorResponse { error: error_type, message: error_message };
+    let error_type = "404";
+    let error_message = "file not found";
+    let response_json = ErrorResponse { error: &error_type, message: &error_message };
     let resp = Response::with((status::Ok, json::encode(&response_json).unwrap()));
     Ok(resp)
 }
@@ -71,7 +71,7 @@ fn get_json_from_file(req: &mut Request) -> IronResult<Response> {
     // let resp = Response::with((status::Ok, format!("{{ \"file\": \"{}\", \"content\": \"{}\" }}", filename, content)));
     
     // Send the JSON response to the browser
-    let response_json = FileResponse { file: filename, content: content };
+    let response_json = FileResponse { file: filename, content: &content };
     let resp = Response::with((status::Ok, json::encode(&response_json).unwrap()));
     Ok(resp)
 }
