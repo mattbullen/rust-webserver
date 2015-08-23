@@ -16,15 +16,15 @@ use rustc_serialize::json;
 // Create a struct for content-based JSON response
 #[derive(RustcEncodable)]
 struct FileResponse<'a> {
-    file: &'a str,
-    content: &'a String
+    file_name: &'a str,
+    file_content: &'a String
 }
 
 // Create a struct for a JSON-based error response
 #[derive(RustcEncodable)]
 struct ErrorResponse<'a> {
-    error: &'a str,
-    message: &'a str
+    error_name: &'a str,
+    error_message: &'a str
 }
 
 // Populate some text files (helps with Heroku configuration to do it this way)
@@ -43,14 +43,13 @@ fn populate_files() {
 
 // The empty request case: returns a JSON object indicating the error (just a basic 404 here)
 fn send_json_error(_: &mut Request) -> IronResult<Response> {
-    
-    // Alternative without using a struct for the JSON
-    // let resp = Response::with((status::Ok, format!("{{ \"error\": \"404\", \"message\": \"file not found\" }}")));
+
+    // Define the error type and message
+    let e_name = "404";
+    let e_message = "file not found";
     
     // Send the JSON response to the browser
-    let error_type = "404";
-    let error_message = "file not found";
-    let response_json = ErrorResponse { error: &error_type, message: &error_message };
+    let response_json = ErrorResponse { error_name: &e_name, error_message: &e_message };
     let resp = Response::with((status::Ok, json::encode(&response_json).unwrap()));
     Ok(resp)
 }
@@ -60,18 +59,15 @@ fn get_json_from_file(req: &mut Request) -> IronResult<Response> {
     
     // Get the name of the file from the request URL
     let params = req.extensions.get::<Router>().unwrap();
-    let filename = params.find("name").unwrap();
+    let f_name = params.find("name").unwrap();
     
     // Retrieve the file and its text content
-    let mut file = File::open(filename).unwrap();
-    let mut content = String::new();
-    file.read_to_string(&mut content).unwrap();
-    
-    // Alternative without using a struct for the JSON
-    // let resp = Response::with((status::Ok, format!("{{ \"file\": \"{}\", \"content\": \"{}\" }}", filename, content)));
+    let mut file = File::open(f_name).unwrap();
+    let mut f_content = String::new();
+    file.read_to_string(&mut f_content).unwrap();
     
     // Send the JSON response to the browser
-    let response_json = FileResponse { file: filename, content: &content };
+    let response_json = FileResponse { file_name: f_name, file_content: &f_content };
     let resp = Response::with((status::Ok, json::encode(&response_json).unwrap()));
     Ok(resp)
 }
