@@ -21,8 +21,9 @@ function request(event) {
                 console.log("Error");
                 $("#json").html("Error");
             } else {
+                console.log("\nResponse:", response);
                 var json = JSON.parse(decodeURI(response));
-                console.log("\nJSON:", json);
+                console.log("JSON.parse():", json);
                 $("#json").html("<pre>" + JSON.stringify(json, null, 4) + "</pre>");
             }
         }
