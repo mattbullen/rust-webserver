@@ -27,7 +27,7 @@ fn populate_files() {
 
 // The empty request case: returns a flagged JSON string
 fn noop(_: &mut Request) -> IronResult<Response> {
-    let resp = Response::with((status::Ok, format!("{{ \"file\": \"none\", \"content\": \"none\" }}")));
+    let resp = Response::with((status::Ok, format!("{{ \"error\": \"404\", \"message\": \"file not found\" }}")));
     Ok(resp)
 }
 
