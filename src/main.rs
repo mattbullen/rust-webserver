@@ -30,13 +30,16 @@ fn noop(_: &mut Request) -> IronResult<Response> {
 // Pull the selected file, extract its text, format into a JSON string, then send it back to the browser
 fn get_json_from_file(req: &mut Request) -> IronResult<Response> {
     
+    // Get the name of the file from the request URL
     let params = req.extensions.get::<Router>().unwrap();
     let filename = params.find("name").unwrap();
     
+    // Retrieve the file and its text content
     let mut file = File::open(filename).unwrap();
     let mut content = String::new();
     file.read_to_string(&mut content).unwrap();
     
+    // Send it to the browser as a JSON-formatted string
     let resp = Response::with((status::Ok, format!("{{ \"file\": \"{}\", \"content\": \"{}\" }}", filename, content)));
     Ok(resp)
 }
@@ -44,7 +47,7 @@ fn get_json_from_file(req: &mut Request) -> IronResult<Response> {
 // For Heroku configuration
 fn get_server_port() -> u16 {
     let port_str = env::var("PORT").unwrap_or(String::new());
-    FromStr::from_str(&port_str).unwrap_or(8080);
+    FromStr::from_str(&port_str).unwrap_or(8080)
 }
 
 // Set up the app's router
