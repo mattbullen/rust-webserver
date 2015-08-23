@@ -48,9 +48,9 @@ fn send_json_error(_: &mut Request) -> IronResult<Response> {
     // let resp = Response::with((status::Ok, format!("{{ \"error\": \"404\", \"message\": \"file not found\" }}")));
     
     // Send the JSON response to the browser
-    let type = "404".to_string();
-    let type_message = "file not found".to_string();
-    let response_json = FileResponse { error: type, message: type_message };
+    let error_type = "404".to_string();
+    let error_message = "file not found".to_string();
+    let response_json = FileResponse { error: error_type, message: error_message };
     let resp = Response::with((status::Ok, json::encode(&response_json).unwrap()));
     Ok(resp)
 }
