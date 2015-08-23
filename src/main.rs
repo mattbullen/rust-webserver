@@ -24,7 +24,7 @@ fn populate_files() {
 // Not really in this example, but the empty request case
 fn noop(_: &mut Request) -> IronResult<Response> {
     let resp = Response::with((status::Ok, format!("{{ \"file\": \"none\", \"content\": \"none\" }}")));
-    Ok(resp);
+    Ok(resp)
 }
 
 // Pull the selected file, extract its text, format into a JSON string, then send it back to the browser
@@ -38,7 +38,7 @@ fn get_json_from_file(req: &mut Request) -> IronResult<Response> {
     file.read_to_string(&mut content).unwrap();
     
     let resp = Response::with((status::Ok, format!("{{ \"file\": \"{}\", \"content\": \"{}\" }}", filename, content)));
-    Ok(resp);
+    Ok(resp)
 }
 
 // For Heroku configuration
