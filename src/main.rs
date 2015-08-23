@@ -27,7 +27,7 @@ struct ErrorResponse<'a> {
     error_message: &'a str
 }
 
-// Populate some text files
+// Populate the sample text files
 fn populate_files() {
     let mut f0 = File::create("hello_world.txt").unwrap();
     f0.write_all(b"\"Hello world!\"");

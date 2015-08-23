@@ -31,7 +31,7 @@ function request(event) {
                     json.error_content = $.parseJSON(json.error_content);
                 }
                 console.log("Parsed JSON:", json);
-                $("#json").html("<pre>" + JSON.stringify(json, null, 4) + "</pre>");
+                $("#json").html("<pre>" + JSON.stringify(json, null, 8) + "</pre>");
             }
         }
     );
