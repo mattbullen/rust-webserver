@@ -1,6 +1,7 @@
 // Pull in the necessary crates
 extern crate iron;
 extern crate router;
+extern crate rustc_serialize;
 
 // Define which parts of the standard library and the imported crates will be used
 use std::fs::File;
@@ -10,6 +11,7 @@ use std::env;
 use iron::{Iron, Request, Response, IronResult};
 use iron::status;
 use router::Router;
+use rustc_serialize::json;
 
 // Populate some text files (helps with Heroku configuration to do it this way)
 fn populate_files() {
@@ -23,6 +25,11 @@ fn populate_files() {
     f3.write_all(b"0123456789");
     let mut f4 = File::create("yay.txt").unwrap();
     f4.write_all(b"It works!");
+}
+
+#[derive(RustcEncodable)]
+struct FileResponse<'a> {
+    file: &'a str
 }
 
 // The empty request case: returns a flagged JSON string
@@ -44,7 +51,11 @@ fn get_json_from_file(req: &mut Request) -> IronResult<Response> {
     file.read_to_string(&mut content).unwrap();
     
     // Send it to the browser as a JSON-formatted string
-    let resp = Response::with((status::Ok, format!("{{ \"file\": \"{}\", \"content\": \"{}\" }}", filename, content)));
+    // let resp = Response::with((status::Ok, format!("{{ \"file\": \"{}\", \"content\": \"{}\" }}", filename, content)));
+    
+    let response_json = FileResponse { file: filename };
+    let resp = Response::with((status::Ok, json::encode(&response_json).unwrap()));
+    
     Ok(resp)
 }
 
