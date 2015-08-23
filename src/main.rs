@@ -25,7 +25,7 @@ fn populate_files() {
     f4.write_all(b"It works!");
 }
 
-// Not really in this example, but the empty request case
+// The empty request case: returns a flagged JSON string
 fn noop(_: &mut Request) -> IronResult<Response> {
     let resp = Response::with((status::Ok, format!("{{ \"file\": \"none\", \"content\": \"none\" }}")));
     Ok(resp)
