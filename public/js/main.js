@@ -25,6 +25,8 @@ function request(event) {
                 console.log("\nResponse:", response);
                 var json = JSON.parse(decodeURI(response));
                 console.log(json.file_content);
+                json.file_content = $.parseJSON(json.file_content);
+                console.log(json.file_content);
                 //console.log("JSON.parse():", json);
                 $("#json").html("<pre>" + JSON.stringify(json, null, 4) + "</pre>");
             }
