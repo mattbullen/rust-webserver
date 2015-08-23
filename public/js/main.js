@@ -4,7 +4,8 @@ function request(event) {
 
     var choice = document.getElementById("choice");
     var choiceValue = choice.options[choice.selectedIndex].value;
-
+    
+    document.getElementById("frame").style.height = "60px";
     window.frames[0].location = "https://gentle-refuge-2601.herokuapp.com/" + choiceValue;
 
     $.ajaxPrefilter(function(options) {
@@ -23,6 +24,7 @@ function request(event) {
             } else {
                 console.log("\nResponse:", response);
                 var json = JSON.parse(decodeURI(response));
+                json.file_content = JSON.parse(json.file_content);
                 console.log("JSON.parse():", json);
                 $("#json").html("<pre>" + JSON.stringify(json, null, 4) + "</pre>");
             }
@@ -31,8 +33,9 @@ function request(event) {
 
 }
 
-function setButtonClickHandler() {
+function init() {
+    document.getElementById("frame").style.height = "33px";
     document.getElementById("button").addEventListener("click", request);
 }
 
-window.addEventListener("DOMContentLoaded", setButtonClickHandler);
+window.addEventListener("DOMContentLoaded", init);

@@ -36,7 +36,7 @@ fn populate_files() {
     let mut f2 = File::create("numbers.txt").unwrap();
     f2.write_all(b"[0, 1, 2, 3, 4, 5]");
     let mut f3 = File::create("objects.txt").unwrap();
-    f3.write_all(b"{ item: { a: 1, b: 2 }, { c: 3, d: 4} }");
+    f3.write_all(b"{ \"item\": { \"a\": 1, \"b\": 2 }, { \"c\": 3, \"d\": 4} }");
 }
 
 // The empty request case: returns a JSON object indicating the error (just a basic 404 here)
