@@ -13,21 +13,21 @@ use iron::status;
 use router::Router;
 use rustc_serialize::json;
 
-// Create a struct for content-based JSON response
+// Create a struct for a content response
 #[derive(RustcEncodable)]
 struct FileResponse<'a> {
     file_name: &'a str,
     file_content: &'a String
 }
 
-// Create a struct for a JSON-based error response
+// Create a struct for an error response
 #[derive(RustcEncodable)]
 struct ErrorResponse<'a> {
     error_name: &'a str,
     error_message: &'a str
 }
 
-// Populate some text files (helps with Heroku configuration to do it this way)
+// Populate some text files
 fn populate_files() {
     let mut f0 = File::create("hello_world.txt").unwrap();
     f0.write_all(b"Hello world!");
@@ -36,7 +36,7 @@ fn populate_files() {
     let mut f2 = File::create("bar.txt").unwrap();
     f2.write_all(b"I'm the bar.txt file!");
     let mut f3 = File::create("numbers.txt").unwrap();
-    f3.write_all(b"0123456789");
+    f3.write_all(b"[0, 1, 2, 3, 4, 5]");
     let mut f4 = File::create("yay.txt").unwrap();
     f4.write_all(b"It works!");
 }
@@ -44,7 +44,7 @@ fn populate_files() {
 // The empty request case: returns a JSON object indicating the error (just a basic 404 here)
 fn send_json_error(_: &mut Request) -> IronResult<Response> {
 
-    // Define the error type and message
+    // Define the error name and message
     let e_name = "404";
     let e_message = "file not found";
     
@@ -59,7 +59,7 @@ fn get_json_from_file(req: &mut Request) -> IronResult<Response> {
     
     // Get the name of the file from the request URL
     let params = req.extensions.get::<Router>().unwrap();
-    let f_name = params.find("name").unwrap();
+    let f_name = params.find("query_string").unwrap();
     
     // Retrieve the file and its text content
     let mut file = File::open(f_name).unwrap();
@@ -78,11 +78,11 @@ fn get_server_port() -> u16 {
     FromStr::from_str(&port_str).unwrap_or(8080)
 }
 
-// Set up the app's router
+// Create the sample files and set up the app's router
 fn main() {
     populate_files();
     let mut router = Router::new();
     router.get("/", send_json_error);
-    router.get("/:name", get_json_from_file);
+    router.get("/:query_string", get_json_from_file);
     Iron::new(router).http(("0.0.0.0", get_server_port())).unwrap();
 }
