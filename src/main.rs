@@ -17,7 +17,7 @@ use rustc_serialize::json;
 #[derive(RustcEncodable)]
 struct FileResponse<'a> {
     file: &'a str,
-    content: &'a str
+    content: &'a String
 }
 
 // Create a struct for a JSON-based error response
@@ -50,7 +50,7 @@ fn send_json_error(_: &mut Request) -> IronResult<Response> {
     // Send the JSON response to the browser
     let error_type = "404".to_string();
     let error_message = "file not found".to_string();
-    let response_json = FileResponse { error: error_type, message: error_message };
+    let response_json = ErrorResponse { error: error_type, message: error_message };
     let resp = Response::with((status::Ok, json::encode(&response_json).unwrap()));
     Ok(resp)
 }
