@@ -5,7 +5,6 @@ function request(event) {
     var choice = document.getElementById("choice");
     var choiceValue = choice.options[choice.selectedIndex].value;
     
-    document.getElementById("frame").style.height = "60px";
     window.frames[0].location = "https://gentle-refuge-2601.herokuapp.com/" + choiceValue;
 
     $.ajaxPrefilter(function(options) {
@@ -39,7 +38,6 @@ function request(event) {
 }
 
 function init() {
-    document.getElementById("frame").style.height = "33px";
     document.getElementById("button").addEventListener("click", request);
 }
 

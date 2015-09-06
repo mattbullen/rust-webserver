@@ -34,6 +34,7 @@ pre {
 
 #frame {
     box-sizing: border-box;
+    height: 60px;
     width: 342px;
     padding-top: 5px;
 }
@@ -44,6 +45,7 @@ pre {
 
 #json {
     box-sizing: border-box;
+    min-height: 60px;
     width: 342px;
     padding: 8px;
     border: 1px solid #aaa;
