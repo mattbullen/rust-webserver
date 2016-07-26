@@ -4,4 +4,4 @@ A side project to learn the [Rust](https://www.rust-lang.org/) language. It's a 
 
 The idea is to send a query string to the server to retrieve text content from a file, then return that content to the browser as a usable JSON object. This version also uses a Node.js proxy to work around Heroku/CORS restrictions, since the front end is hosted on a different domain than the app.
 
-##### Try it out: http://bullen.io/rust/index.html
+##### Try it out: www.matthewbullen.net/rust/public/index.html
